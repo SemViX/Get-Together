@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'events',
-    'users'
+    'users',
+    'botapp'
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,5 @@ STATIC_ROOT = os.path.join(BASE_DIR / 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+TELEGRAM_BOT_TOKEN = '7552376690:AAFUXaEC1mqE9Q-K_jdHZzDV7xJ63pFE82Q'
