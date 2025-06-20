@@ -124,7 +124,7 @@ async def handle_register_user(update:Update, context:ContextTypes.DEFAULT_TYPE)
         ]
     else:
         keyboard = [    
-            ["Шукати події",],
+            ["Шукати події",  "Шукати за категорією"],
             ["Профіль", "Вийти"]
         ]
         

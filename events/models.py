@@ -12,7 +12,7 @@ class Category(models.Model):
         verbose_name_plural = "Категорії"
 
 class Event(models.Model):
-    title = models.CharField(max_length=255, verbose_name='Заголовок')
+    title = models.CharField(max_length=255, verbose_name='Заголовок', unique=True)
     description = models.TextField(verbose_name="Опис")
     start_time = models.DateTimeField(verbose_name="Дата початку")
     creator = models.ForeignKey(
@@ -23,7 +23,8 @@ class Event(models.Model):
     )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL, 
-        verbose_name='Учасники'
+        verbose_name='Учасники',
+        blank=True
     )
     address = models.CharField(max_length=255, verbose_name="Адреса")
     category = models.ForeignKey(

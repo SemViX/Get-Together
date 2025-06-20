@@ -1,18 +1,31 @@
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, CallbackQueryHandler
 from django.conf import settings
 from .handlers.start import start
 from .handlers.login import login_conv_handler, get_profile, logout
 from .handlers.registration import registration_conv_handler
+from .handlers.buttons import handle_menu_button
+from .handlers.events import paginate_event, take_part, handle_delete_event, filter_events_by_category
+from .handlers.create_events import create_event_conv_handler
+from .handlers.edit_event import edit_event_conv_handler
 
 def run_bot():
     app = ApplicationBuilder().token(settings.TELEGRAM_BOT_TOKEN).build()
     
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('profile', get_profile))
-    app.add_handler(login_conv_handler)
     app.add_handler(CommandHandler('logout', logout))
+    
+    app.add_handler(login_conv_handler)
     app.add_handler(registration_conv_handler)
-
+    app.add_handler(create_event_conv_handler)
+    app.add_handler(edit_event_conv_handler)
+    
+    app.add_handler(CallbackQueryHandler(paginate_event, pattern="^(prev_event|next_event)$"))
+    app.add_handler(CallbackQueryHandler(take_part, pattern="^take_part$"))
+    app.add_handler(CallbackQueryHandler(handle_delete_event, pattern='^delete_event$'))
+    app.add_handler(CallbackQueryHandler(filter_events_by_category, pattern="^category:"))
+    
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_menu_button))
 
     print('Запуск бота...')
     app.run_polling()

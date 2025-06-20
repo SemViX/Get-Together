@@ -39,7 +39,7 @@ async def get_password(update:Update, context:ContextTypes.DEFAULT_TYPE):
             ]
         else:
             keyboard = [    
-                ["Шукати події",],
+                ["Шукати події", "Шукати за категорією"],
                 ["Профіль", "Вийти"]
             ]
         
@@ -56,7 +56,10 @@ async def get_profile(update:Update, context:ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id
     try:
         user = await get_user_profile(telegram_id)
-        await update.message.reply_text(f"Ім'я користувача: {user.username} \nЕлектронна адреса: {user.email}")
+        text = f"Ім'я користувача: {user.username} \nЕлектронна адреса: {user.email}"
+        if user.bio:
+            text += f"\nДодаткова інформація: {user.bio}"
+        await update.message.reply_text(text=text) 
     except User.DoesNotExist:
         await update.message.reply_text("Ви не авторизовані!")
 
