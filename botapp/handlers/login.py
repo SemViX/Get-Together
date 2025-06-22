@@ -1,5 +1,5 @@
 from telegram.ext import ConversationHandler, ContextTypes, MessageHandler, filters, CallbackQueryHandler
-from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup
 from ..services import login_user, get_user_profile, logout_user
 from asgiref.sync import sync_to_async
 from users.models import User
@@ -59,7 +59,11 @@ async def get_profile(update:Update, context:ContextTypes.DEFAULT_TYPE):
         text = f"Ім'я користувача: {user.username} \nЕлектронна адреса: {user.email}"
         if user.bio:
             text += f"\nДодаткова інформація: {user.bio}"
-        await update.message.reply_text(text=text) 
+
+        keyboard = [[InlineKeyboardButton("Редагувати профіль", callback_data="edit_profile")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await update.message.reply_text(text=text, reply_markup=reply_markup) 
     except User.DoesNotExist:
         await update.message.reply_text("Ви не авторизовані!")
 

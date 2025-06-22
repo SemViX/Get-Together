@@ -7,6 +7,7 @@ from .handlers.buttons import handle_menu_button
 from .handlers.events import paginate_event, take_part, handle_delete_event, filter_events_by_category
 from .handlers.create_events import create_event_conv_handler
 from .handlers.edit_event import edit_event_conv_handler
+from .handlers.edit_profile import edit_profile_conv_handler
 
 def run_bot():
     app = ApplicationBuilder().token(settings.TELEGRAM_BOT_TOKEN).build()
@@ -19,6 +20,7 @@ def run_bot():
     app.add_handler(registration_conv_handler)
     app.add_handler(create_event_conv_handler)
     app.add_handler(edit_event_conv_handler)
+    app.add_handler(edit_profile_conv_handler)
     
     app.add_handler(CallbackQueryHandler(paginate_event, pattern="^(prev_event|next_event)$"))
     app.add_handler(CallbackQueryHandler(take_part, pattern="^take_part$"))

@@ -7,6 +7,7 @@ from django.utils.timezone import make_aware
 from events.models import Event, Category
 from typing import List
 from datetime import datetime
+from typing import Literal
 
 
 User = get_user_model()
@@ -131,7 +132,11 @@ async def delete_event(event_title:str):
     except ObjectDoesNotExist:
         return "Подія вже видалена!"
     
-async def edit_event_field(event_title:str, new_value:str, filed):
+async def edit_event_field(
+    event_title:str,
+    new_value:str, 
+    filed: Literal["username", 'description', 'start_time', 'address', 'category']
+):
     is_event_exist = await sync_to_async(Event.objects.filter(title=event_title).exists)()
     if is_event_exist == False:
         return False
@@ -166,5 +171,34 @@ async def edit_event_field(event_title:str, new_value:str, filed):
     await sync_to_async(event.save)()
     return msg
         
+async def edit_profile_field(
+    user_telegram_id:int, 
+    new_value:str, 
+    field_name:Literal['username', 'email', 'bio']
+):
+    
+    user = await get_user_by_telegram_id(user_telegram_id)
 
+
+    match field_name:
+        case "username":
+            user.username = new_value
+            msg = "Ім'я користувача успішно змінено"
+        case "bio":
+            user.bio = new_value
+            msg = "Додаткова інформація успішно змінена"
+        case "email":
+             
+            try:
+                validate_email(new_value)
+            except ValidationError:
+                return "Введено некоректну адресу електронної пошти."
+
+            user.email = new_value
+            msg = "Електронна адреса успішно змінена"
+        case _:
+            return "Невідоме поле"
+
+    await sync_to_async(user.save)()
+    return msg
 

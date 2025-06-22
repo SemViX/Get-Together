@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'events',
     'users',
-    'botapp'
+    'botapp',
+    'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [
@@ -53,6 +55,24 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Get-Together API',
+    'DESCRIPTION': 'API for managing events, categories, profiles',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 ROOT_URLCONF = 'get_together.urls'
 
