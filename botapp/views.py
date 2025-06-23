@@ -10,6 +10,7 @@ async def telegram_webhook(request):
     if request.method == "POST":
         data = json.loads(request.body)
         update = Update.de_json(data, Bot(token=settings.TELEGRAM_TOKEN))
+        await app.initialize()
         await app.process_update(update)
         return JsonResponse({"ok": True})
     return JsonResponse({"error": "POST only"}, status=405)
