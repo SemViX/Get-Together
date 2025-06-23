@@ -149,4 +149,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-TELEGRAM_BOT_TOKEN = '7552376690:AAFUXaEC1mqE9Q-K_jdHZzDV7xJ63pFE82Q'
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+ALLOWED_HOSTS = ["*"]  # аб
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "replace-this")
+
+INSTALLED_APPS += ['corsheaders']
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
+CORS_ALLOW_ALL_ORIGINS = True  # або список дозволених

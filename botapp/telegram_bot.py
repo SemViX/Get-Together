@@ -1,5 +1,4 @@
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, CallbackQueryHandler
-from django.conf import settings
 from .handlers.start import start
 from .handlers.login import login_conv_handler, get_profile, logout
 from .handlers.registration import registration_conv_handler
@@ -8,9 +7,14 @@ from .handlers.events import paginate_event, take_part, handle_delete_event, fil
 from .handlers.create_events import create_event_conv_handler
 from .handlers.edit_event import edit_event_conv_handler
 from .handlers.edit_profile import edit_profile_conv_handler
+import os
+
+TOKEN = os.environ.get("TELEGRAM_TOKEN")
+
+
+app = ApplicationBuilder().token(TOKEN).build()
 
 def run_bot():
-    app = ApplicationBuilder().token(settings.TELEGRAM_BOT_TOKEN).build()
     
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('profile', get_profile))
