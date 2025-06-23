@@ -2,8 +2,8 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from telegram import Update, Bot
-from telegram_bot import app
 from django.conf import settings
+from .telegram_bot import app
 
 @csrf_exempt
 def telegram_webhook(request):
