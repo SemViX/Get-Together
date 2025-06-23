@@ -165,3 +165,6 @@ CORS_ALLOW_ALL_ORIGINS = True  # або список дозволених
 CSRF_TRUSTED_ORIGINS = [
     "https://get-together.up.railway.app",
 ]
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "")
+RAILWAY_STATIC_URL = os.getenv("RAILWAY_STATIC_URL", "")

@@ -127,6 +127,6 @@ login_conv_handler = ConversationHandler(
         PASSWORD: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_password)]
     },
     fallbacks=[],
-    per_message=True
+    per_message=False
     
 )
