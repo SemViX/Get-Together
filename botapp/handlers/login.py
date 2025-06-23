@@ -7,6 +7,15 @@ from users.models import User
 USERNAME, PASSWORD = range(2)
 
 async def start_login(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    """Починає процес входу в профіль, запитуючи ім'я користувача
+
+    Args:
+        update (Update):Об'єкт оновлення від Telegram, що містить інформацію про повідомлення.
+        context (ContextTypes.DEFAULT_TYPE): Контекст бота, що дозволяє отримувати доступ до додаткових функцій та даних.
+    Side Effects:
+       - Запитує ім'я корисувача
+       - Змінює стан на USERNAME
+    """
     query = update.callback_query
     await query.answer()
 
@@ -17,11 +26,32 @@ async def start_login(update:Update, context:ContextTypes.DEFAULT_TYPE):
     return USERNAME
 
 async def get_login(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    """Отримаує ім'я користувача
+
+    Args:
+        update (Update):Об'єкт оновлення від Telegram, що містить інформацію про повідомлення.
+        context (ContextTypes.DEFAULT_TYPE): Контекст бота, що дозволяє отримувати доступ до додаткових функцій та даних.
+    Side Effects:
+       - Отримує ім'я корисувача та зберігає його в user_data
+       - Запитує пароль користувача
+       - Змінює стан на PASSWORD
+    """
     context.user_data['username'] = update.message.text
     await update.message.reply_text("Введіть пароль: ")
     return PASSWORD
 
 async def get_password(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    """Обробляє ввеедений користувачем пароль, намагається авторизувати його
+    Args:
+        update (Update):Об'єкт оновлення від Telegram, що містить інформацію про повідомлення.
+        context (ContextTypes.DEFAULT_TYPE): Контекст бота, що дозволяє отримувати доступ до додаткових функцій та даних.
+    Side Effects:
+       - Отримує пароль користувача
+       - Видаляє повідомлення з паролем користувача
+       - Намагається провести авторизацію, викликаючи функцію `login_user` 
+       - Відображає персоналізовану клавіатру(для автора подій або звичайного користувача)
+       - Завершує процес авторизації 
+    """
     password = update.message.text
     await update.effective_message.delete()
     username = context.user_data.get('username')
@@ -53,6 +83,14 @@ async def get_password(update:Update, context:ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 async def get_profile(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    """Отримує профіль користувача
+    Args:
+        update (Update):Об'єкт оновлення від Telegram, що містить інформацію про повідомлення.
+        context (ContextTypes.DEFAULT_TYPE): Контекст бота, що дозволяє отримувати доступ до додаткових функцій та даних.
+    Side Effects:
+       - Надсилає повідомлення з інформацією користувача, якщо він авторизований.
+       - Надсилає 'Ви не авторизовані!', якщо користувач не увійшов в акаунт
+    """
     telegram_id = update.effective_user.id
     try:
         user = await get_user_profile(telegram_id)
@@ -68,6 +106,14 @@ async def get_profile(update:Update, context:ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Ви не авторизовані!")
 
 async def logout(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    """Вихід з акаунту
+    Args:
+        update (Update):Об'єкт оновлення від Telegram, що містить інформацію про повідомлення.
+        context (ContextTypes.DEFAULT_TYPE): Контекст бота, що дозволяє отримувати доступ до додаткових функцій та даних.
+    Side Effects:
+       - Виходить за акаунту, викликаючи функцію 'logout_user'
+       - Надсилає 'Ви успішно вийшли з акаунта' або 'Ви ще не авторизовані', якщо користувач не був авторизований
+    """
     try:
         await logout_user(update.effective_user.id)
         await update.message.reply_text("Ви успішно вийшли з акаунта", reply_markup=ReplyKeyboardRemove())
