@@ -185,5 +185,6 @@ create_event_conv_handler = ConversationHandler(
     },
     fallbacks=[
         CommandHandler('cancel', cancel_creation)
-    ]
+    ],
+    per_message=True
 )

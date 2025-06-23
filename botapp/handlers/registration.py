@@ -259,5 +259,7 @@ registration_conv_handler = ConversationHandler(
     },
     fallbacks=[
         CallbackQueryHandler(cancel_registration, pattern='^cancel$')
-    ]
+    ],
+    per_message=True
+    
 )

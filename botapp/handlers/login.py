@@ -126,5 +126,7 @@ login_conv_handler = ConversationHandler(
         USERNAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_login)],
         PASSWORD: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_password)]
     },
-    fallbacks=[]
+    fallbacks=[],
+    per_message=True
+    
 )
