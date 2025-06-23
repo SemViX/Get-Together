@@ -150,7 +150,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-ALLOWED_HOSTS = ["*"]  # аб
+ALLOWED_HOSTS = [
+    'get-together.up.railway.app',
+    '127.0.0.1',                   
+    'localhost',                     
+]
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "replace-this")
 
