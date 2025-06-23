@@ -5,6 +5,6 @@ django-cors-headers
 django-filter
 drf-spectacular
 drf-spectacular-sidecar
-python-telegram-bot==20.7
 pillow
 python-telegram-bot==20.8
+python-telegram-bot[webhooks]==20.8
