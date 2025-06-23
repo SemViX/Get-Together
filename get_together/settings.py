@@ -161,3 +161,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "replace-this")
 INSTALLED_APPS += ['corsheaders']
 MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 CORS_ALLOW_ALL_ORIGINS = True  # або список дозволених
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://get-together.up.railway.app",
+]
