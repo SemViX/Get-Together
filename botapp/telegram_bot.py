@@ -11,7 +11,6 @@ import os
 
 TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
-print(f"TOKEN: `{TOKEN}`")
 
 app = ApplicationBuilder().token(TOKEN).build()
 

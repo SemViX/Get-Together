@@ -149,7 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip().lstrip("=")
 ALLOWED_HOSTS = [
     'get-together.up.railway.app',
     '127.0.0.1',                   
