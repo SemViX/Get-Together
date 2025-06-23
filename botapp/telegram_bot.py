@@ -9,7 +9,7 @@ from .handlers.edit_event import edit_event_conv_handler
 from .handlers.edit_profile import edit_profile_conv_handler
 import os
 
-TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip().lstrip("=")
 
 
 app = ApplicationBuilder().token(TOKEN).build()
