@@ -6,10 +6,10 @@ from django.conf import settings
 from .telegram_bot import app
 
 @csrf_exempt
-def telegram_webhook(request):
+async def telegram_webhook(request):
     if request.method == "POST":
         data = json.loads(request.body)
         update = Update.de_json(data, Bot(token=settings.TELEGRAM_TOKEN))
-        app.process_update(update)
+        await app.process_update(update)
         return JsonResponse({"ok": True})
     return JsonResponse({"error": "POST only"}, status=405)
