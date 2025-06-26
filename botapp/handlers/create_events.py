@@ -3,6 +3,8 @@ from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filt
 
 from ..services import get_user_profile, create_event
 
+from .buttons import handle_menu_button, MENU_BUTTONS_REGEX
+
 TITLE, DESCRIPTION, START_TIME, ADDRESS, CATEGORY = range(5)
 
 async def start_creation(update:Update, context:ContextTypes.DEFAULT_TYPE):
@@ -177,14 +179,30 @@ async def cancel_creation(update:Update, context:ContextTypes.DEFAULT_TYPE):
 create_event_conv_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex("^Створити подію") & filters.TEXT & ~filters.COMMAND, start_creation)],
     states={
-        TITLE: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_title)],
-        DESCRIPTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_description)],
-        START_TIME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_start_time)],
-        ADDRESS: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_address)],
-        CATEGORY: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_category)]
+        TITLE: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_title), 
+        ],
+        DESCRIPTION: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_description),
+        ],
+        START_TIME: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_start_time),
+        ],
+        ADDRESS: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_address),
+        ],
+        CATEGORY: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_category),
+        ]
     },
     fallbacks=[
         CommandHandler('cancel', cancel_creation)
     ],
-    per_message=False
+    per_message=False,
+    allow_reentry=True
 )

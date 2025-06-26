@@ -3,6 +3,8 @@ from telegram.ext import ContextTypes, MessageHandler, CallbackQueryHandler, Con
 
 from ..services import edit_profile_field
 
+from .buttons import handle_menu_button, MENU_BUTTONS_REGEX
+
 
 START_EDITING_PROFILE, EDIT_USERNAME, EDIT_BIO, EDIT_EMAIL = range(4)
 
@@ -151,13 +153,22 @@ edit_profile_conv_handler = ConversationHandler(
     entry_points=[CallbackQueryHandler(get_filed_to_edit, pattern="^edit_profile$")],
     states={
         START_EDITING_PROFILE: [CallbackQueryHandler(start_editing_profile, pattern="^(edit_username|edit_bio|edit_email)$")],
-        EDIT_USERNAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_new_username)],
-        EDIT_EMAIL: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_new_email)],
-        EDIT_BIO: [MessageHandler(filters.TEXT & ~filters.COMMAND, get_new_bio)]
+        EDIT_USERNAME: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_new_username)
+        ],
+        EDIT_EMAIL: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_new_email)
+        ],
+        EDIT_BIO: [
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, get_new_bio)
+        ]
     },
     fallbacks=[
         CommandHandler('cancel', cancel_editing)
     ],
-    per_message=False
-    
+    per_message=False,
+    allow_reentry=True
 )

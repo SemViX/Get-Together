@@ -24,18 +24,20 @@ def run_bot():
     app.add_handler(CommandHandler('profile', get_profile))
     app.add_handler(CommandHandler('logout', logout))
 
+    
     app.add_handler(login_conv_handler)
     app.add_handler(registration_conv_handler)
     app.add_handler(create_event_conv_handler)
     app.add_handler(edit_event_conv_handler)
     app.add_handler(edit_profile_conv_handler)
 
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_menu_button))
+    
     app.add_handler(CallbackQueryHandler(paginate_event, pattern="^(prev_event|next_event)$"))
     app.add_handler(CallbackQueryHandler(take_part, pattern="^take_part$"))
     app.add_handler(CallbackQueryHandler(handle_delete_event, pattern='^delete_event$'))
     app.add_handler(CallbackQueryHandler(filter_events_by_category, pattern="^category:"))
 
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_menu_button))
     
     app.run_webhook(
         listen="0.0.0.0",

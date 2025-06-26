@@ -1,6 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, CallbackQueryHandler, filters, CommandHandler
 from ..services import edit_event_field
+from .buttons import handle_menu_button, MENU_BUTTONS_REGEX
 
 START_EDITING, EDIT_TITLE, EDIT_DESCRIPTION, EDIT_START_TIME, EDIT_ADDRESS, EDIT_CATEGORY = range(6)
 
@@ -216,25 +217,31 @@ edit_event_conv_handler = ConversationHandler(
             CallbackQueryHandler(edit_field_selection, pattern="^edit_event_")
         ],
         EDIT_TITLE: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_title)
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_title),
         ],
         EDIT_DESCRIPTION: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_description)
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_description),
         ],
         EDIT_START_TIME: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_start_time)
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_start_time),
         ],
         EDIT_ADDRESS: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_address)
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_address),
         ],
         EDIT_CATEGORY: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_category)
+            MessageHandler(filters.Regex(MENU_BUTTONS_REGEX) & filters.TEXT & ~filters.COMMAND, handle_menu_button),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, edit_category),
         ],
     },
     fallbacks=[
         CommandHandler("cancel", cancel_editing)
     ],
-    per_message=False
+    per_message=False,
+    allow_reentry=True
     
 )
 

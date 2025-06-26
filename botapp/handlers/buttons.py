@@ -1,9 +1,20 @@
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, ConversationHandler
 from .login import logout, get_profile
 from .events import get_events, get_created_events, choose_category
 from ..services import get_user_profile
-from .create_events import start_creation
+import re
+
+MENU_BUTTON_TEXTS = [
+    "Шукати події",
+    "Профіль",
+    "Вийти",
+    "Мої події",
+    "Створити подію",
+    "Шукати за категорією"
+]
+
+MENU_BUTTONS_REGEX = "^(" + "|".join([re.escape(text) for text in MENU_BUTTON_TEXTS]) + ")$"
 
 async def handle_menu_button(update:Update, context:ContextTypes.DEFAULT_TYPE):
     """Обробляє натискання кнопок меню Telegram-бота
@@ -34,17 +45,20 @@ async def handle_menu_button(update:Update, context:ContextTypes.DEFAULT_TYPE):
     match text:
         case "Шукати події":
             await get_events(update=update, context=context)
+            return ConversationHandler.END
         case "Профіль":
             await get_profile(update=update, context=context)
+            return ConversationHandler.END
         case "Вийти":
             await logout(update=update, context=context)
+            return ConversationHandler.END
         case "Мої події":
             await get_created_events(update=update, context=context)
-        case "Створити подію":
-            await start_creation(update=update, context=context)
+            return ConversationHandler.END
         case "Шукати за категорією":
             await choose_category(update=update, context=context)
+            return ConversationHandler.END
         case _:
-            await update.message.reply_text("Команда не розпізнана")
+            return None
 
 
